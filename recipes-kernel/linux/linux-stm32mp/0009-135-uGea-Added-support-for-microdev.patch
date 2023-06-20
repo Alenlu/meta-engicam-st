@@ -188,6 +188,45 @@ index 000000000..633a8d407
 +		};
 +	};
 +
++	eth2_pins_mx: eth2_mx-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('A', 12, AF11)>, /* ETH2_CRS_DV */
++					 <STM32_PINMUX('E', 2, AF10)>, /* ETH2_RXD1 */
++					 <STM32_PINMUX('F', 4, AF11)>; /* ETH2_RXD0 */
++			bias-disable;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('B', 2, AF11)>; /* ETH2_MDIO */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <0>;
++		};
++		pins3 {
++			pinmux = <STM32_PINMUX('F', 6, AF11)>, /* ETH2_TX_EN */
++					 <STM32_PINMUX('F', 7, AF11)>, /* ETH2_TXD0 */
++					 <STM32_PINMUX('G', 5, AF10)>, /* ETH2_MDC */
++					 <STM32_PINMUX('G', 8, AF13)>, /* ETH2_CLK */
++					 <STM32_PINMUX('G', 11, AF10)>; /* ETH2_TXD1 */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++	};
++
++	eth2_sleep_pins_mx: eth2_sleep_mx-0 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 12, ANALOG)>, /* ETH2_CRS_DV */
++					 <STM32_PINMUX('B', 2, ANALOG)>, /* ETH2_MDIO */
++					 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH2_RXD1 */
++					 <STM32_PINMUX('F', 4, ANALOG)>, /* ETH2_RXD0 */
++					 <STM32_PINMUX('F', 6, ANALOG)>, /* ETH2_TX_EN */
++					 <STM32_PINMUX('F', 7, ANALOG)>, /* ETH2_TXD0 */
++					 <STM32_PINMUX('G', 5, ANALOG)>, /* ETH2_MDC */
++					 <STM32_PINMUX('G', 8, ANALOG)>, /* ETH2_CLK */
++					 <STM32_PINMUX('G', 11, ANALOG)>; /* ETH2_TXD1 */
++		};
++	};
++
 +	i2c2_pins_mx: i2c2_mx-0 {
 +		pins {
 +			pinmux = <STM32_PINMUX('D', 7, AF4)>, /* I2C2_SCL */
@@ -477,6 +516,33 @@ index 000000000..633a8d407
 +		};
 +	};	
 +	/* USER CODE END eth1 */
++};
++
++&eth2{
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&eth2_pins_mx>;
++	pinctrl-1 = <&eth2_sleep_pins_mx>;
++	status = "okay";
++
++	/* USER CODE BEGIN eth2 */
++	phy-mode = "rmii";
++	max-speed = <100>;
++	phy-handle = <&phy0_eth2>;
++	st,ext-phyclk;
++	nvmem-cells = <&ethernet_mac2_address>;
++	nvmem-cell-names = "mac-address";
++
++	mdio1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy0_eth2: ethernet-phy@0 {
++			compatible = "ethernet-phy-id0007.c131";
++			reset-gpios = <&gpioe 14 GPIO_ACTIVE_LOW>;
++			reg = <0>;
++		};
++	};
++	/* USER CODE END eth2 */
 +};
 +
 +&i2c2{
